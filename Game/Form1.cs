@@ -19,7 +19,7 @@ namespace Game
         private void Form1_Load(object sender, EventArgs e)
         {
             // Creates board
-            Tile[,] TilesToDraw = postActionHandler.LoadVisuals(BoardSize);
+            TileWithButton[,] TilesToDraw = postActionHandler.LoadVisuals(BoardSize);
             BoardSize = TilesToDraw.GetLength(0);
             DrawTiles(TilesToDraw, CreateFlowLayoutPanal(BoardSize));
             ResizeForm();
@@ -36,7 +36,7 @@ namespace Game
         }
 
         // Creates tiles
-        private void DrawTiles(Tile[,] TilesToDraw, FlowLayoutPanel panel)
+        private void DrawTiles(TileWithButton[,] TilesToDraw, FlowLayoutPanel panel)
         {
             for (int i = 0; i < TilesToDraw.GetLength(0); i++)
             {
@@ -52,7 +52,7 @@ namespace Game
 
         private void DynamicButton_Click(object sender, EventArgs e)
         {
-            postActionHandler.TileClicked((Tile)sender);
+            postActionHandler.TileClicked((TileWithButton)sender);
         }
 
         // Button to change AI difficulty
@@ -110,10 +110,10 @@ namespace Game
 
             foreach (var item in flowLayoutPanel.Controls)
             {
-                if (item is Tile)
+                if (item is TileWithButton)
                 {
-                    ((Tile)item).Width = flowLayoutPanel.Width / (BoardSize + 1);
-                    ((Tile)item).Height = flowLayoutPanel.Height / (BoardSize + 1);
+                    ((TileWithButton)item).Width = flowLayoutPanel.Width / (BoardSize + 1);
+                    ((TileWithButton)item).Height = flowLayoutPanel.Height / (BoardSize + 1);
                 }
             }
 

@@ -11,12 +11,12 @@ namespace Game
 {
     internal class GameMove
     {
-        private Tile[,] board;
+        public ITile[,] board { get; set;}
         private int[,,] CopyCoordanateOptions { get; set; } = new int[3, 3, 2];
         private int[,,] MoveCoordanateOptions { get; set; } = new int[5,5,2];
 
 
-        public GameMove(Tile[,] board) 
+        public GameMove(ITile[,] board) 
         { 
             this.board = board;
 
@@ -25,8 +25,13 @@ namespace Game
         }
     
         // Does a move with tileFrom to TileTo
-        public bool Move(Tile tileFrom, Tile TileTo)
+        public bool Move(ITile tileFrom, ITile TileTo)
         {
+            if(tileFrom.SetTeam(tileFrom.team).Equals("1"))
+            {
+                Debug.WriteLine("1");
+            }
+
             bool ValidMove = false;
             tileFrom.SetTeam(tileFrom.team);
             if(tileFrom.team == TileTo.team) { return false; }
@@ -84,7 +89,7 @@ namespace Game
         }
 
         // Infects all tiles around tile with team
-        public int InfectTiles(Tile tile, Team team, bool OnlyGetNumber = false)
+        public int InfectTiles(ITile tile, Team team, bool OnlyGetNumber = false)
         {
             int boardSize = CopyCoordanateOptions.GetLength(0);
             int x = tile.x;
@@ -114,7 +119,7 @@ namespace Game
         }
 
         // Checks if the move is valid
-        private bool MoveValidator(Tile tileFrom, Tile TileTo, int[,,] CoordanateOptions)
+        private bool MoveValidator(ITile tileFrom, ITile TileTo, int[,,] CoordanateOptions)
         {
             int x = tileFrom.x - TileTo.x;
             int y = tileFrom.y - TileTo.y;

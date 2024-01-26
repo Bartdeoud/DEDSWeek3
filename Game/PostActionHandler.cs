@@ -3,6 +3,7 @@ using Game.GameBoard.GameBoard;
 using Game.MoveCalculator;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,11 @@ namespace Game
     internal class PostActionHandler
     {
         public Board GameBoard;
-        private Tile? PreviousTileClicked;
+        private ITile? PreviousTileClicked;
         private GameMove GameMove;
         private Team TeamToMove;
         private Difficulty DifficultyLevel = Difficulty.Easy;
+        public static bool EndMoveCalulation = false;
 
         public PostActionHandler()
         {
@@ -23,7 +25,7 @@ namespace Game
         }
 
         // Returns the visuals for the board
-        public Tile[,] LoadVisuals(int Size) 
+        public TileWithButton[,] LoadVisuals(int Size) 
         {
             GameBoard = new Board(Size);
             SetTeams();
@@ -46,7 +48,7 @@ namespace Game
         }
 
         // Handles the click event on a tile
-        public void TileClicked(Tile tile)
+        public void TileClicked(TileWithButton tile)
         {
 
             if (PreviousTileClicked == null)
@@ -79,22 +81,32 @@ namespace Game
         // Does the AI move
         private void DoAIMove()
         {
-            AIMoveGenerator AIMove = new AIMoveGenerator(GameBoard.BoardTiles, TeamToMove);
-            Tile[] move;
+            SimpleMoveGenerator SimpleMove = new SimpleMoveGenerator(GameBoard.BoardTiles, TeamToMove);
+            ITile[] move = new ITile[2];
 
             if (DifficultyLevel == Difficulty.Easy)
             {
-                move = AIMove.GetRandomMove();
+                move = SimpleMove.GetRandomMove();
             }
             else if (DifficultyLevel == Difficulty.Medium)
             {
-                move = AIMove.GetBestMove1();
+                move = SimpleMove.GetMediumMove();
             }
             else
             {
-                move = AIMove.GetBestMove1();
-            }
+                Thread tread = new Thread(() =>
+                {
+                    move = new AdvancedMoveGenerator(GameBoard.BoardTiles, TeamToMove).GetAdvancedMove();
+                });
+                tread.Start();
+                Thread.Sleep(100);
+                EndMoveCalulation = true;
+                tread.Join();
 
+                move[0] = GameBoard.BoardTiles[move[0].x, move[0].y];
+                move[1] = GameBoard.BoardTiles[move[1].x, move[1].y];
+            }
+            Debug.WriteLine(move[0].x + " " + move[0].y + " - " + move[1].x + " " + move[1].y);
             GameMove.Move(move[0], move[1]);
 
             TeamToMove = Team.Hoodie;
