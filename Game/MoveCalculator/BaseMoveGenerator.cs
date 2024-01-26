@@ -15,8 +15,8 @@ namespace Game.MoveCalculator
             this.board = board;
             this.ForTeam = ForTeam;
 
-            MoveMapper.InitializeMoveCoordinateOptions(3, CopyCoordanateOptions);
-            MoveMapper.InitializeMoveCoordinateOptions(5, MoveCoordanateOptions);
+            CopyCoordanateOptions = MoveMapper.CopyCoordanateOptions;
+            MoveCoordanateOptions = MoveMapper.MoveCoordanateOptions;
         }
 
         // returns all moves that are possible for team ForTeam

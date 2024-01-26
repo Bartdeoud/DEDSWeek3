@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+
+
     internal static class MoveMapper
     {
+        public static int[,,] CopyCoordanateOptions { get; set; } = InitializeMoveCoordinateOptions(3);
+        public static int[,,] MoveCoordanateOptions { get; set; } = InitializeMoveCoordinateOptions(5);
+
         // Returns the options for a move based on board size
-        public static void InitializeMoveCoordinateOptions(int boardSize, int[,,] CoordinateOptions)
+        public static int[,,] InitializeMoveCoordinateOptions(int boardSize)
         {
+            int[,,]CoordinateOptions = new int[boardSize, boardSize, 2];
+
             int center = boardSize / 2;
 
             for (int i = 0; i < boardSize; i++)
@@ -31,6 +38,8 @@ namespace Game
                     }
                 }
             }
+
+            return CoordinateOptions;
         }
 
     }

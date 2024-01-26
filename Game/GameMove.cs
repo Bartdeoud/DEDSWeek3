@@ -20,8 +20,8 @@ namespace Game
         { 
             this.board = board;
 
-            MoveMapper.InitializeMoveCoordinateOptions(3, CopyCoordanateOptions);
-            MoveMapper.InitializeMoveCoordinateOptions(5, MoveCoordanateOptions);
+            CopyCoordanateOptions = MoveMapper.CopyCoordanateOptions;
+            MoveCoordanateOptions = MoveMapper.MoveCoordanateOptions;
         }
     
         // Does a move with tileFrom to TileTo
@@ -84,6 +84,7 @@ namespace Game
                 {
                     MessageBox.Show("Draw");
                 }
+                PostActionHandler.GameEnded = true;
                 Application.Restart();
             }
         }

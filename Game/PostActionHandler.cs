@@ -17,7 +17,7 @@ namespace Game
         private GameMove GameMove;
         private Team TeamToMove;
         private Difficulty DifficultyLevel = Difficulty.Easy;
-        public static bool EndMoveCalulation = false;
+        public static bool GameEnded = false;
 
         public PostActionHandler()
         {
@@ -81,6 +81,7 @@ namespace Game
         // Does the AI move
         private void DoAIMove()
         {
+            if (GameEnded) return;
             SimpleMoveGenerator SimpleMove = new SimpleMoveGenerator(GameBoard.BoardTiles, TeamToMove);
             ITile[] move = new ITile[2];
 
@@ -94,14 +95,7 @@ namespace Game
             }
             else
             {
-                Thread tread = new Thread(() =>
-                {
-                    move = new AdvancedMoveGenerator(GameBoard.BoardTiles, TeamToMove).GetAdvancedMove();
-                });
-                tread.Start();
-                Thread.Sleep(100);
-                EndMoveCalulation = true;
-                tread.Join();
+                move = new AdvancedMoveGenerator(GameBoard.BoardTiles, TeamToMove).GetAdvancedMove();
 
                 move[0] = GameBoard.BoardTiles[move[0].x, move[0].y];
                 move[1] = GameBoard.BoardTiles[move[1].x, move[1].y];

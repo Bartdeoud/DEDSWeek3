@@ -16,7 +16,7 @@ namespace Game.GameBoard.GameBoard
 
         public ITile CreateTile(int x, int y, Team team = Team.Neutral);
 
-        public string SetTeam(Team team);
+        public void SetTeam(Team team);
 
         public void InfectWithTeam(Team team);
     }
@@ -27,7 +27,7 @@ namespace Game.GameBoard.GameBoard
         public int y { get; set; }
         public Team team { get; set; }
 
-        public string SetTeam(Team team) { return "";  }
+        public void SetTeam(Team team) { }
         public void InfectWithTeam(Team team) { }
 
         public ITile CreateTile(int x, int y, Team team = Team.Neutral)
@@ -54,7 +54,7 @@ namespace Game.GameBoard.GameBoard
             return this;
         }
 
-        public string SetTeam(Team team)
+        public void SetTeam(Team team)
         {
             switch (team)
             {
@@ -70,7 +70,6 @@ namespace Game.GameBoard.GameBoard
             }
             Text = team.ToString();
             this.team = team;
-            return "1";
         }
 
         public void InfectWithTeam(Team team)
