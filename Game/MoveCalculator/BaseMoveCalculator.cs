@@ -2,7 +2,7 @@
 
 namespace Game.MoveCalculator
 {
-    internal class BaseMoveGenerator
+    internal class BaseMoveCalculator
     {
         protected ITile[,] board;
         protected Team ForTeam;
@@ -10,7 +10,7 @@ namespace Game.MoveCalculator
         protected int[,,] CopyCoordanateOptions { get; set; } = new int[3, 3, 2];
         protected int[,,] MoveCoordanateOptions { get; set; } = new int[5, 5, 2];
 
-        public BaseMoveGenerator(ITile[,] board, Team ForTeam)
+        public BaseMoveCalculator(ITile[,] board, Team ForTeam)
         {
             this.board = board;
             this.ForTeam = ForTeam;

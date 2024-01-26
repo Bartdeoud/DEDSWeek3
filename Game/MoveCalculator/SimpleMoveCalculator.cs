@@ -2,11 +2,11 @@
 
 namespace Game.MoveCalculator
 {
-    internal class SimpleMoveGenerator : BaseMoveGenerator
+    internal class SimpleMoveCalculator : BaseMoveCalculator
     {
         Random random = new Random();
 
-        public SimpleMoveGenerator(ITile[,] board, Team ForTeam) : base(board, ForTeam) { }
+        public SimpleMoveCalculator(ITile[,] board, Team ForTeam) : base(board, ForTeam) { }
 
         // returns random move
         public ITile[] GetRandomMove()

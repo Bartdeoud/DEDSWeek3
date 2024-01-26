@@ -2,43 +2,20 @@
 using Microsoft.VisualBasic.Devices;
 using System.Diagnostics;
 using System.Threading;
-using static Game.MoveCalculator.AdvancedMoveGenerator;
+using static Game.MoveCalculator.AdvancedMoveCalculator;
 
 namespace Game.MoveCalculator
 {
-    internal class AdvancedMoveGenerator : BaseMoveGenerator
+    internal class AdvancedMoveCalculator : BaseMoveCalculator
     {
+        public AdvancedMoveCalculator(ITile[,] board, Team ForTeam) : base(board, ForTeam) { }
 
-        public AdvancedMoveGenerator(ITile[,] board, Team ForTeam) : base(board, ForTeam) { }
-
-        public ITile[] GetAdvancedMove()
+        public List<MovesWithPerformanceCount> GetAdvancedMove()
         {
-            List<MovesWithPerformanceCount> PerformanceCounts = CalculateMovesWithPerformanceCount();
-            return PerformanceCounts.MaxBy(p => p.performanceCount).moves[0];
+            return CalculateMovesWithPerformanceCount();
         }
 
-        // returns a new board with only the inportand values from the old board
-        private ITile[,] CopyBoard(ITile[,] originalBoard)
-        {
-            int rows = originalBoard.GetLength(0);
-            int cols = originalBoard.GetLength(1);
-            ITile[,] copiedBoard = new ITile[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    if (originalBoard[i, j] != null)
-                    {
-                        copiedBoard[i, j] = new TileToCalculate().CreateTile(originalBoard[i, j].x, originalBoard[i, j].y, originalBoard[i, j].team);
-                    }
-                }
-            }
-
-            return copiedBoard;
-        }
-
-        private List<MovesWithPerformanceCount> CalculateMovesWithPerformanceCount()
+        public List<MovesWithPerformanceCount> CalculateMovesWithPerformanceCount()
         {
             List<MovesWithPerformanceCount> movesWithPerformanceCounts = new List<MovesWithPerformanceCount>();
 
@@ -68,6 +45,7 @@ namespace Game.MoveCalculator
             return movesWithPerformanceCounts;
         }
 
+        // TODO stop hier een list<MovesWithPerformanceCount> in
         public class MovesWithPerformanceCount
         {
             public int performanceCount { get; set; } = 0;

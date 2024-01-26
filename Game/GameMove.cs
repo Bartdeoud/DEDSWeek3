@@ -27,11 +27,6 @@ namespace Game
         // Does a move with tileFrom to TileTo
         public bool Move(ITile tileFrom, ITile TileTo)
         {
-            if(tileFrom.SetTeam(tileFrom.team).Equals("1"))
-            {
-                Debug.WriteLine("1");
-            }
-
             bool ValidMove = false;
             tileFrom.SetTeam(tileFrom.team);
             if(tileFrom.team == TileTo.team) { return false; }

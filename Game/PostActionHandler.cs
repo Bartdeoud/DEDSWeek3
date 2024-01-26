@@ -82,7 +82,7 @@ namespace Game
         private void DoAIMove()
         {
             if (GameEnded) return;
-            SimpleMoveGenerator SimpleMove = new SimpleMoveGenerator(GameBoard.BoardTiles, TeamToMove);
+            SimpleMoveCalculator SimpleMove = new SimpleMoveCalculator(GameBoard.BoardTiles, TeamToMove);
             ITile[] move = new ITile[2];
 
             if (DifficultyLevel == Difficulty.Easy)
@@ -95,7 +95,7 @@ namespace Game
             }
             else
             {
-                move = new AdvancedMoveGenerator(GameBoard.BoardTiles, TeamToMove).GetAdvancedMove();
+                //move = new AdvancedMoveThreadHandler(GameBoard.BoardTiles, TeamToMove).GetAdvancedMove();
 
                 move[0] = GameBoard.BoardTiles[move[0].x, move[0].y];
                 move[1] = GameBoard.BoardTiles[move[1].x, move[1].y];
