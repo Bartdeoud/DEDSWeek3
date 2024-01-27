@@ -26,6 +26,7 @@ namespace Game
             flowLayoutPanel.Show();
         }
 
+        // Creates FlowLayoutPanel
         private FlowLayoutPanel CreateFlowLayoutPanal(int Size)
         {
             flowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
@@ -50,6 +51,7 @@ namespace Game
             DrawAITile();
         }
 
+        // Button to do a move
         private void DynamicButton_Click(object sender, EventArgs e)
         {
             postActionHandler.TileClicked((TileWithButton)sender);
@@ -64,6 +66,7 @@ namespace Game
             Controls.Add(AIButton);
         }
 
+        // Change AI difficulty
         private void AIButton_Click(object sender, EventArgs e)
         {
             Difficulty difficulty = postActionHandler.changeDifficulty();
@@ -93,6 +96,7 @@ namespace Game
             ResizeForm();
         }
 
+        // Resize form
         private void ResizeForm()
         {
             if (Width > Height)

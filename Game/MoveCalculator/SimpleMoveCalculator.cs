@@ -2,6 +2,7 @@
 
 namespace Game.MoveCalculator
 {
+    // Class that calculates Easy and Medium moves
     internal class SimpleMoveCalculator : BaseMoveCalculator
     {
         Random random = new Random();

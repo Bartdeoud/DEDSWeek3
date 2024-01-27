@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-
-
+    // Calculates the options for a move based on move range
     internal static class MoveMapper
     {
         public static int[,,] CopyCoordanateOptions { get; set; } = InitializeMoveCoordinateOptions(3);
         public static int[,,] MoveCoordanateOptions { get; set; } = InitializeMoveCoordinateOptions(5);
 
-        // Returns the options for a move based on board size
         public static int[,,] InitializeMoveCoordinateOptions(int boardSize)
         {
             int[,,]CoordinateOptions = new int[boardSize, boardSize, 2];

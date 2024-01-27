@@ -97,6 +97,8 @@ namespace Game
             {
                 //move = new AdvancedMoveThreadHandler(GameBoard.BoardTiles, TeamToMove).GetAdvancedMove();
 
+                move = new AdvancedMoveThreadHandler(GameBoard.BoardTiles, TeamToMove).StartCalculation().Result;
+
                 move[0] = GameBoard.BoardTiles[move[0].x, move[0].y];
                 move[1] = GameBoard.BoardTiles[move[1].x, move[1].y];
             }
