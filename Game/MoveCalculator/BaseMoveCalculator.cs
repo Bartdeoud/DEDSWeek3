@@ -36,7 +36,7 @@ namespace Game.MoveCalculator
             return new List<ITile[]>[] { AllCopyMoves, AllMoveMoves };
         }
 
-        // returns all copy moves that are posible from tile
+        // returns all moves moves that are posible from tile
         private List<ITile[]> getAllMoveMovesFromTile(ITile tile)
         {
             List<ITile> tiles = new List<ITile>();

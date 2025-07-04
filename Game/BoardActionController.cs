@@ -1,16 +1,11 @@
 ﻿using Game.GameBoard;
 using Game.GameBoard.GameBoard;
 using Game.MoveCalculator;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class PostActionHandler
+    internal class BoardActionController
     {
         public Board GameBoard;
         private ITile? PreviousTileClicked;
@@ -19,18 +14,12 @@ namespace Game
         private Difficulty DifficultyLevel = Difficulty.Easy;
         public static bool GameEnded = false;
 
-        public PostActionHandler()
+        public BoardActionController(int Size)
         {
             TeamToMove = Team.Hoodie;
-        }
-
-        // Returns the visuals for the board
-        public TileWithButton[,] LoadVisuals(int Size) 
-        {
             GameBoard = new Board(Size);
             SetTeams();
             GameMove = new GameMove(GameBoard.BoardTiles);
-            return GameBoard.BoardTiles;
         }
 
         // Sets the teams on the board
@@ -45,6 +34,15 @@ namespace Game
                     GameBoard.BoardTiles[j, i].SetTeam(Team.Hoodie);
                 }
             }
+            /*
+            GameBoard.BoardTiles[6, 0].SetTeam(Team.Hoodie);
+
+            GameBoard.BoardTiles[4, 3].SetTeam(Team.BaggySweater);
+
+            GameBoard.BoardTiles[2, 6].SetTeam(Team.Hoodie);
+            GameBoard.BoardTiles[3, 6].SetTeam(Team.Hoodie);
+            GameBoard.BoardTiles[1, 3].SetTeam(Team.Hoodie);
+            */
         }
 
         // Handles the click event on a tile
@@ -53,7 +51,7 @@ namespace Game
 
             if (PreviousTileClicked == null)
             {
-                if(TeamToMove != tile.team)
+                if (TeamToMove != tile.team)
                 {
                     MessageBox.Show("U geen zet doen met deze tile");
                     return;
@@ -63,7 +61,8 @@ namespace Game
             }
             else
             {
-                if (GameMove.Move(PreviousTileClicked, tile)){
+                if (GameMove.Move(PreviousTileClicked, tile))
+                {
                     if (TeamToMove == Team.Hoodie)
                     {
                         TeamToMove = Team.BaggySweater;
@@ -99,6 +98,13 @@ namespace Game
 
                 move = new AdvancedMoveThreadHandler(GameBoard.BoardTiles, TeamToMove).StartCalculation().Result;
 
+                ITile[] mediumMove = SimpleMove.GetMediumMove();
+
+                if (move[0].x == mediumMove[0].x && move[0].y == mediumMove[0].y && move[1].x == mediumMove[1].x && move[1].y == mediumMove[1].y)
+                {
+                    Debug.WriteLine("Medium move");
+                }
+
                 move[0] = GameBoard.BoardTiles[move[0].x, move[0].y];
                 move[1] = GameBoard.BoardTiles[move[1].x, move[1].y];
             }
@@ -111,7 +117,7 @@ namespace Game
         // Changes the difficulty
         public Difficulty changeDifficulty()
         {
-            if(DifficultyLevel == Difficulty.Easy)
+            if (DifficultyLevel == Difficulty.Easy)
             {
                 DifficultyLevel = Difficulty.Medium;
             }

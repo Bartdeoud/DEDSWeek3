@@ -1,28 +1,23 @@
 using Game.GameBoard.GameBoard;
-using System.Windows.Forms;
-using static Game.PostActionHandler;
+using static Game.BoardActionController;
 
 namespace Game
 {
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-        }
-
-        PostActionHandler postActionHandler = new PostActionHandler();
-        private int BoardSize = 7;
+        private BoardActionController _controller;
+        private const int _boardSize = 7;
         FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
         Button AIButton = new Button();
 
-        private void Form1_Load(object sender, EventArgs e)
+        public Form1()
         {
+            InitializeComponent();
             // Creates board
-            TileWithButton[,] TilesToDraw = postActionHandler.LoadVisuals(BoardSize);
-            BoardSize = TilesToDraw.GetLength(0);
-            DrawTiles(TilesToDraw, CreateFlowLayoutPanal(BoardSize));
-            ResizeForm();
+            _controller = new BoardActionController(_boardSize);
+            TileWithButton[,] TilesToDraw = _controller.GameBoard.BoardTiles;
+            DrawTiles(TilesToDraw, CreateFlowLayoutPanal(_boardSize));
+            Form1_Resize(null, null);
             flowLayoutPanel.Show();
         }
 
@@ -54,7 +49,7 @@ namespace Game
         // Button to do a move
         private void DynamicButton_Click(object sender, EventArgs e)
         {
-            postActionHandler.TileClicked((TileWithButton)sender);
+            _controller.TileClicked((TileWithButton)sender);
         }
 
         // Button to change AI difficulty
@@ -69,7 +64,7 @@ namespace Game
         // Change AI difficulty
         private void AIButton_Click(object sender, EventArgs e)
         {
-            Difficulty difficulty = postActionHandler.changeDifficulty();
+            Difficulty difficulty = _controller.changeDifficulty();
             if (difficulty == Difficulty.Easy)
             {
                 AIButton.BackColor = Color.LightGreen;
@@ -88,27 +83,18 @@ namespace Game
         }
 
         // Resize form
-        DateTime lastUpdate = DateTime.Now;
         private void Form1_Resize(object sender, EventArgs e)
-        {
-            if (DateTime.Now - lastUpdate < TimeSpan.FromMilliseconds(100)) return;
-            lastUpdate = DateTime.Now;
-            ResizeForm();
-        }
-
-        // Resize form
-        private void ResizeForm()
         {
             if (Width > Height)
             {
                 flowLayoutPanel.Location = new Point((Width - Height) / 2, 0);
-                flowLayoutPanel.Width = Height - flowLayoutPanel.Width / (BoardSize + 1);
+                flowLayoutPanel.Width = Height - flowLayoutPanel.Width / (_boardSize + 1);
                 flowLayoutPanel.Height = Height;
             }
             else
             {
                 flowLayoutPanel.Location = new Point(0, 0);
-                flowLayoutPanel.Width = Width - flowLayoutPanel.Width / (BoardSize + 1);
+                flowLayoutPanel.Width = Width - flowLayoutPanel.Width / (_boardSize + 1);
                 flowLayoutPanel.Height = Width;
             }
 
@@ -116,13 +102,13 @@ namespace Game
             {
                 if (item is TileWithButton)
                 {
-                    ((TileWithButton)item).Width = flowLayoutPanel.Width / (BoardSize + 1);
-                    ((TileWithButton)item).Height = flowLayoutPanel.Height / (BoardSize + 1);
+                    ((TileWithButton)item).Width = flowLayoutPanel.Width / (_boardSize + 1);
+                    ((TileWithButton)item).Height = flowLayoutPanel.Height / (_boardSize + 1);
                 }
             }
 
-            AIButton.Width = flowLayoutPanel.Width / (BoardSize + 1);
-            AIButton.Height = flowLayoutPanel.Height / (BoardSize + 1);
+            AIButton.Width = flowLayoutPanel.Width / (_boardSize + 1);
+            AIButton.Height = flowLayoutPanel.Height / (_boardSize + 1);
             AIButton.Location = new Point(Width - AIButton.Width - 30, 0);
         }
     }

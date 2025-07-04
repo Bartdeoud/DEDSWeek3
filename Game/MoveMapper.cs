@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Game
+﻿namespace Game
 {
     // Calculates the options for a move based on move range
     internal static class MoveMapper
@@ -14,7 +8,7 @@ namespace Game
 
         public static int[,,] InitializeMoveCoordinateOptions(int boardSize)
         {
-            int[,,]CoordinateOptions = new int[boardSize, boardSize, 2];
+            int[,,] CoordinateOptions = new int[boardSize, boardSize, 2];
 
             int center = boardSize / 2;
 
@@ -39,6 +33,5 @@ namespace Game
 
             return CoordinateOptions;
         }
-
     }
 }

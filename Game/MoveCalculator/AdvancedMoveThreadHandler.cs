@@ -1,8 +1,4 @@
 ﻿using Game.GameBoard.GameBoard;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using static Game.MoveCalculator.AdvancedMoveCalculator;
 
 namespace Game.MoveCalculator
@@ -21,47 +17,91 @@ namespace Game.MoveCalculator
 
         public async Task<ITile[]> StartCalculation()
         {
-            List<MovesWithPerformanceCount> list1 = await CalculationThread(movesWithPerformanceCounts, true, 2);
+            //List<MovesWithPerformanceCount> list1 = await CalculationThread(movesWithPerformanceCounts, true, 2);
 
-            List<MovesWithPerformanceCount> list2 = list1.OrderByDescending(x => x.performanceCount).ToList();
-            ITile[] move = list2.First().move;
+            //List<MovesWithPerformanceCount> list2 = list1.OrderByDescending(x => x.performanceCount).ToList();
 
-            return move;
+            //MovesWithPerformanceCount movesWithPerformanceCount = new MovesWithPerformanceCount();
+            //movesWithPerformanceCount.moves = movesWithPerformanceCounts;
+            //MovesWithPerformanceCount list3 = FindBestMove(movesWithPerformanceCount, 100, true);
+
+            //ITile[] move = list2.First().move;
+
+            //return list3.move;
+            return null;
         }
 
-        //TODO improve clauclations
-        private async Task<List<MovesWithPerformanceCount>> CalculationThread(List<MovesWithPerformanceCount> list1, bool MainTeam, int MaxDeep)
+        public MovesWithPerformanceCount FindBestMove(MovesWithPerformanceCount currentMove, int depth, bool isMaximizingPlayer)
         {
-            List<MovesWithPerformanceCount> list2 = await CalculatePerformanceCount(list1, getOtherTeam(list1[0].move[0].team).Result);
-            if (MaxDeep == 0)
+            MovesWithPerformanceCount bestMove = null;
+            double bestScore = isMaximizingPlayer ? double.MinValue : double.MaxValue;
+
+            foreach (var move in currentMove.moves)
             {
-                foreach (var item in list2)
+                double score = CalculateBestMove(move, depth, !isMaximizingPlayer);
+
+                if (isMaximizingPlayer && score > bestScore)
                 {
-                    int i = item.moves.Sum(m => m.performanceCount) / list2.Count;
-                    if (MainTeam)
-                    {
-                        item.performanceCount += i;
-                    }
-                    else
-                    {
-                        item.performanceCount -= i;
-                    }
+                    bestScore = score;
+                    bestMove = move;
                 }
-                return list2;
+                else if (!isMaximizingPlayer && score < bestScore)
+                {
+                    bestScore = score;
+                    bestMove = move;
+                }
             }
 
+            return bestMove;
+        }
+
+
+        private double CalculateBestMove(MovesWithPerformanceCount currentMove, int depth, bool isMaximizingPlayer)
+        {
+            if (depth == 0 || currentMove.moves.Count == 0)
+            {
+                return currentMove.performanceCount;
+            }
+
+            if (isMaximizingPlayer)
+            {
+                double maxEval = double.MinValue;
+                foreach (var move in currentMove.moves)
+                {
+                    double eval = CalculateBestMove(move, depth - 1, false);
+                    maxEval = Math.Max(maxEval, eval);
+                }
+                return maxEval;
+            }
+            else
+            {
+                double minEval = double.MaxValue;
+                foreach (var move in currentMove.moves)
+                {
+                    double eval = CalculateBestMove(move, depth - 1, true);
+                    minEval = Math.Min(minEval, eval);
+                }
+                return minEval;
+            }
+        }
+
+
+        //TODO improve clauclations
+        private async Task<List<MovesWithPerformanceCount>> CalculationThread(List<MovesWithPerformanceCount> list1, int MaxDeep, bool tja)
+        {
+
+            foreach (int i in Enumerable.Range(0, MaxDeep))
+            {
+                foreach (MovesWithPerformanceCount mwpc in list1)
+                {
+
+                    mwpc.moves = await CalculationThread(mwpc.moves, MaxDeep, tja);
+                }
+                list1 = await CalculationThread(list1, MaxDeep, tja);
+            }
             MaxDeep--;
 
-            var tasks = list2.Select(item => CalculationThread(item.moves, !MainTeam, MaxDeep)).ToList();
-            var results = await Task.WhenAll(tasks);
-
-            for (int j = 0; j < list2.Count; j++)
-            {
-                list2[j].moves = results[j]; // Zorg dat dit correct is op basis van je logica
-                int i = list2[j].moves.Sum(m => m.performanceCount) / list2[j].moves.Count;
-                //writeCountsToConsole(list2);
-                list2[j].performanceCount += MainTeam ? i : -i;
-            }
+            List<MovesWithPerformanceCount> list2 = await CalculatePerformanceCount(list1, getOtherTeam(list1[0].move[0].team).Result);
 
             return list2;
         }

@@ -1,36 +1,31 @@
-﻿using Game.GameBoard;
-using Game.GameBoard.GameBoard;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Game.GameBoard.GameBoard;
 
 namespace Game
 {
     internal class GameMove
     {
-        public ITile[,] board { get; set;}
+        public ITile[,] board { get; set; }
         private int[,,] CopyCoordanateOptions { get; set; } = new int[3, 3, 2];
-        private int[,,] MoveCoordanateOptions { get; set; } = new int[5,5,2];
+        private int[,,] MoveCoordanateOptions { get; set; } = new int[5, 5, 2];
 
 
-        public GameMove(ITile[,] board) 
-        { 
+        public GameMove(ITile[,] board)
+        {
             this.board = board;
 
             CopyCoordanateOptions = MoveMapper.CopyCoordanateOptions;
             MoveCoordanateOptions = MoveMapper.MoveCoordanateOptions;
         }
-    
+
         // Does a move with tileFrom to TileTo
         public bool Move(ITile tileFrom, ITile TileTo)
         {
             bool ValidMove = false;
             tileFrom.SetTeam(tileFrom.team);
-            if(tileFrom.team == TileTo.team) { return false; }
+
+            if (tileFrom.team == TileTo.team) { return false; }
             if (TileTo.team != Team.Neutral) { return false; }
+
             // Check for copy move
             if (MoveValidator(tileFrom, TileTo, CopyCoordanateOptions))
             {
@@ -61,13 +56,13 @@ namespace Game
             int neutral = 0;
             foreach (var item in board)
             {
-                if(item.team == Team.Hoodie) hoodies++;
-                if(item.team == Team.BaggySweater) baggySweaters++;
-                if(item.team == Team.Neutral) neutral++;
+                if (item.team == Team.Hoodie) hoodies++;
+                if (item.team == Team.BaggySweater) baggySweaters++;
+                if (item.team == Team.Neutral) neutral++;
             }
-            if(hoodies == 0 || baggySweaters == 0 || neutral == 0)
+            if (hoodies == 0 || baggySweaters == 0 || neutral == 0)
             {
-                if(hoodies > baggySweaters)
+                if (hoodies > baggySweaters)
                 {
                     MessageBox.Show("Hoodies Won");
                 }
@@ -79,7 +74,7 @@ namespace Game
                 {
                     MessageBox.Show("Draw");
                 }
-                PostActionHandler.GameEnded = true;
+                BoardActionController.GameEnded = true;
                 Application.Restart();
             }
         }
@@ -99,12 +94,13 @@ namespace Game
                 {
                     int x2 = x + CopyCoordanateOptions[i, j, 0];
                     int y2 = y + CopyCoordanateOptions[i, j, 1];
+                    // Check if the coordinates are within the bounds of the board
                     if (x2 < board.GetLength(0) && x2 >= 0)
                         if (y2 < board.GetLength(1) && y2 >= 0)
                         {
-                            if(board[x2, y2].team != team && board[x2, y2].team != Team.Neutral)
+                            if (board[x2, y2].team != team && board[x2, y2].team != Team.Neutral)
                             {
-                                if(!OnlyGetNumber)
+                                if (!OnlyGetNumber)
                                     board[x2, y2].InfectWithTeam(team);
                                 infectedTiles++;
                             }

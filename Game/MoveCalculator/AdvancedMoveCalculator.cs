@@ -1,8 +1,4 @@
 ﻿using Game.GameBoard.GameBoard;
-using Microsoft.VisualBasic.Devices;
-using System.Diagnostics;
-using System.Threading;
-using static Game.MoveCalculator.AdvancedMoveCalculator;
 
 namespace Game.MoveCalculator
 {
@@ -34,7 +30,7 @@ namespace Game.MoveCalculator
             {
                 MovesWithPerformanceCount movesWithPerformanceCount = new MovesWithPerformanceCount();
                 movesWithPerformanceCount.performanceCount += gameMove.InfectTiles(item[1], ForTeam, true) + 1;
-                movesWithPerformanceCount.move = (item); 
+                movesWithPerformanceCount.move = (item);
                 movesWithPerformanceCount.board = gameMove.board;
 
                 movesWithPerformanceCounts.Add(movesWithPerformanceCount);
@@ -43,10 +39,10 @@ namespace Game.MoveCalculator
             return movesWithPerformanceCounts;
         }
 
-        // TODO stop hier een list<MovesWithPerformanceCount> in
+
         public class MovesWithPerformanceCount
         {
-            public int performanceCount { get; set; } = 0;
+            public double performanceCount { get; set; } = 0;
             public ITile[,] board;
             public ITile[] move { get; set; }
             public List<MovesWithPerformanceCount> moves { get; set; } = new List<MovesWithPerformanceCount>();
